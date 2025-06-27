@@ -1,0 +1,35 @@
+services:
+  patient-db:
+    image: postgres:latest
+    container_name: patient-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "500:5432"
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+    networks:
+      - patient-net
+
+  patient-app:
+    build:
+      context: ../demo
+    container_name: patient-app
+    depends_on:
+      - patient-db
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://patient-db:5432/db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_SQL_INIT_MODE: always
+    networks:
+      - patient-net
+
+networks:
+  patient-net:
+    driver: bridge
