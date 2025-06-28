@@ -6,7 +6,9 @@ import com.PatientManagement.demo.Model.Patient;
 import com.PatientManagement.demo.Repository.PatientRepository;
 import com.PatientManagement.demo.dto.PatientRequestDTO;
 import com.PatientManagement.demo.dto.PatientResponseDTO;
+import com.PatientManagement.demo.kafka.KafkaProducer;
 import com.PatientManagement.demo.mapper.PatientMapper;
+import com.PatientManagement.grpc.BillingServicegrpcclient;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,9 +18,13 @@ import java.util.UUID;
 @Service
 public class PatientService {
     private PatientRepository patientRepository;
+    private final BillingServicegrpcclient billingServicegrpcclient;
+    private final KafkaProducer kafkaProducer;
 
-    public PatientService(PatientRepository patientRepository){
+    public PatientService(PatientRepository patientRepository, BillingServicegrpcclient billingServicegrpcclient, KafkaProducer kafkaProducer){
         this.patientRepository=patientRepository;
+        this.billingServicegrpcclient=billingServicegrpcclient;
+        this.kafkaProducer=kafkaProducer;
     }
 
     public List<PatientResponseDTO> getPatients(){
@@ -33,6 +39,8 @@ public class PatientService {
             throw new EmailAlreadyExistsException("A patient with this email exists" + patientRequestDTO.getEmail());
         }
         Patient newPatient= patientRepository.save(PatientMapper.toModel(patientRequestDTO));
+        billingServicegrpcclient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(), newPatient.getEmail());
+        kafkaProducer.sendEvent(newPatient);
         return PatientMapper.toDTO(newPatient);
     }
 

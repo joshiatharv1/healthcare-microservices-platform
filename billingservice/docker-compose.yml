@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  billingservice:
+    build: .
+    container_name: billingservice
+    ports:
+      - "8091:8091"
+      - "9001:9001"
+    networks:
+      - patient-net
+
+networks:
+  patient-net:
+    driver: bridge
