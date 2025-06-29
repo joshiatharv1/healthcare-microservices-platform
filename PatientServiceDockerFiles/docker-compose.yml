@@ -89,6 +89,17 @@ services:
     networks:
       - patient-net
 
+  auth-service:
+    build:
+      context: ../authservice
+    container_name: auth-service
+    ports:
+      - "9006:9006"
+    depends_on:
+      - auth-service-db
+    networks:
+      - patient-net
+
 networks:
   patient-net:
     driver: bridge

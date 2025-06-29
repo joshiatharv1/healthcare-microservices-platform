@@ -11,7 +11,7 @@ public class LoginRequestDTO {
 
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Minimum size of password is 6 characters")
-    private String password;
+    private static String password;
 
     public String getEmail() {
         return email;
@@ -21,7 +21,7 @@ public class LoginRequestDTO {
         this.email = email;
     }
 
-    public String getPassword() {
+    public static String getPassword() {
         return password;
     }
 
