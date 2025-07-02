@@ -1,98 +1,60 @@
-# \# Patient Management System – Microservices Architecture
+# 🏥 Patient Management Microservices Platform
 
-# 
+A production-grade microservices architecture built using Java, Spring Boot, Kafka, Docker, and AWS. This platform enables secure, scalable handling of patient data with real-time analytics, billing services, and authentication.
 
-# This project is a microservices-based Patient Management System built using Spring Boot, secured with JWT authentication, containerized via Docker, and routed through an API Gateway.
+---
 
-# 
+## ⚙️ Architecture Overview
 
-# \## 🔧 Technologies Used
+This system is composed of four core services:
+- **Patient Service** – Manages patient records and CRUD operations.
+- **Auth Service** – Centralized JWT-based authentication and authorization.
+- **Billing Service** – gRPC service for invoice generation and payment tracking.
+- **Analytics Service** – Consumes Kafka events for real-time health data insights.
 
-# \- \*\*Java 21\*\*, \*\*Spring Boot 3.5\*\*
+All services communicate over REST/gRPC and are containerized via Docker.
 
-# \- \*\*Spring Cloud Gateway\*\*
+![Architecture Diagram](./assets/architecture.png) <!-- Optional: include your system diagram -->
 
-# \- \*\*Spring Security + JWT\*\*
+---
 
-# \- \*\*PostgreSQL\*\*
+## 🚀 Features
 
-# \- \*\*Docker + Docker Compose\*\*
+- ✅ JWT-based authentication & secure API Gateway
+- ✅ Real-time Kafka event streaming (Apache Kafka + Protobuf)
+- ✅ gRPC for efficient inter-service communication
+- ✅ Dockerized with Docker Compose and AWS ECS Fargate deployment
+- ✅ Local AWS testing using LocalStack
+- ✅ Infrastructure as Code using AWS CloudFormation
 
-# \- \*\*gRPC (for Analytics Service)\*\*
+---
 
-# \- \*\*Kafka\*\* (future analytics events)
+## 🧰 Tech Stack
 
-# \- \*\*OpenAPI/Swagger\*\*
+| Category      | Tools / Frameworks                                    |
+|---------------|--------------------------------------------------------|
+| Language      | Java 17                                                |
+| Backend       | Spring Boot, gRPC, Hibernate, REST, DTO Layering       |
+| Messaging     | Apache Kafka, Protobuf                                 |
+| Auth & Security | JWT, Spring Security, OAuth2                         |
+| Database      | PostgreSQL (Amazon RDS), Flyway                        |
+| DevOps        | Docker, Docker Compose, AWS ECS, CloudFormation        |
+| Testing       | JUnit, Mockito                                         |
+| Infra (Local) | LocalStack, AWS CLI, Java SDK                          |
 
-# 
+---
 
-# \## 📦 Microservices
+## 🛠️ Setup Instructions
 
-# 
+### Prerequisites
+- Java 17+
+- Docker & Docker Compose
+- Maven
+- AWS CLI (configured)
+- LocalStack (for local AWS simulation)
 
-# \### 1. Auth Service (`auth-service`)
+### 1. Clone the repo
 
-# \- Handles user login and JWT generation
-
-# \- Validates tokens via `/validate` endpoint
-
-# \- Loads user data via `data.sql`
-
-# \- Exposed route via API Gateway: `/api/auth/\*\*`
-
-# 
-
-# \### 2. Patient Service (`patient-app`)
-
-# \- Manages patient CRUD operations
-
-# \- Secured with JWT via Gateway filter
-
-# \- Exposed via: `/api/patients/\*\*`
-
-# 
-
-# \### 3. Analytics Service (`analytics-service`)
-
-# \- Receives data via gRPC
-
-# \- Processes and stores analytics info (WIP)
-
-# 
-
-# \## 🌐 API Gateway
-
-# \- Single entrypoint on `localhost:4004`
-
-# \- Routes:
-
-# &nbsp; - `/api/auth/\*\*` → Auth Service
-
-# &nbsp; - `/api/patients/\*\*` → Patient Service
-
-# &nbsp; - `/api-docs/auth` and `/api-docs/patients` for OpenAPI
-
-# 
-
-# \## 🔒 JWT Authentication Flow
-
-# 1\. Login at `/api/auth/login`
-
-# 2\. Get JWT token in response
-
-# 3\. Pass token in `Authorization: Bearer <token>` header
-
-# 4\. Gateway uses custom `JwtValidation` filter to authorize
-
-# 
-
-# \## 🐳 Dockerized Setup
-
-# Each service and database runs in a container:
-
-# ```bash
-
-# docker-compose up --build
-
-
-
+```bash
+git clone https://github.com/joshiatharv1/patient-management-platform.git
+cd patient-management-platform
